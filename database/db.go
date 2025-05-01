@@ -13,7 +13,6 @@ import (
 var DB *sql.DB
 
 func ConnectDB() {
-	// .env dosyasını yükle
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning: .env dosyası yüklenemedi, default değerler kullanılacak")
 	}
