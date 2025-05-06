@@ -8,7 +8,7 @@ import (
 func Register(c *fiber.Ctx) error {
 	user := models.User{
 		Id:        1111,
-		FirstName: "Jhon",
+		FirstName: "Jake",
 		Email:     "jhond@gmail.com",
 		Password:  "1979",
 	}
