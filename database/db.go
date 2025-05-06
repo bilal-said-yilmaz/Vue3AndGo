@@ -1,36 +1,32 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
-	_ "github.com/jackc/pgx/v5/stdlib"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+
 	"github.com/joho/godotenv"
 )
 
-var DB *sql.DB
+var DB *gorm.DB
 
 func ConnectDB() {
 	if err := godotenv.Load(); err != nil {
-		log.Println("Warning: .env dosyası yüklenemedi, default değerler kullanılacak")
+		log.Println(".env dosyası yüklenemedi, default değerler kullanılacak.")
 	}
 
-	dsn := os.Getenv("DB_URL") // Çevresel değişkenden DSN al
+	dsn := os.Getenv("DB_URL")
 	if dsn == "" {
-		log.Fatal("Veritabanı bağlantı dizesi bulunamadı!")
+		log.Fatal("DB_URL bulunamadı.")
 	}
 
 	var err error
-	DB, err = sql.Open("pgx", dsn)
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Veritabanına bağlanırken hata oluştu: %v", err)
-	}
-
-	err = DB.Ping()
-	if err != nil {
-		log.Fatalf("Veritabanı bağlantısı başarısız: %v", err)
+		log.Fatalf("GORM ile veritabanına bağlanırken hata: %v", err)
 	}
 
 	fmt.Println("PostgreSQL bağlantısı başarılı!")

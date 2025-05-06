@@ -2,28 +2,20 @@ package main
 
 import (
 	"blog/database"
+	"blog/routes"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"log"
 )
 
 func main() {
-
 	database.ConnectDB()
 
-	if database.DB != nil {
-		defer database.DB.Close()
+	_, err := database.DB.DB()
+	if err != nil {
+		log.Fatalf("Veritabanı bağlantısı alınamadı: %v", err)
 	}
-
-	fmt.Println("Sunucu çalışıyor...")
-
 	app := fiber.New()
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello World!")
-	})
-
-	if err := app.Listen(":8000"); err != nil {
-		log.Fatalf("Sunucu başlatılamadı: %v", err)
-	}
+	routes.Setup(app)
+	fmt.Println("Sunucu çalışıyor...")
 }
